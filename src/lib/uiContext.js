@@ -6,6 +6,7 @@ export function UIProvider({ children }) {
   const [toast, setToast] = useState({ visible: false, message: '' });
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const toastTimer = useRef(null);
 
   // Init theme from localStorage / system preference (client-only)
@@ -16,13 +17,16 @@ export function UIProvider({ children }) {
     } else {
       setIsDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
+    setMounted(true);
   }, []);
 
-  // Apply / remove 'dark' class on <html>
+  // Apply / remove 'dark' class on <html> — only after init to avoid
+  // overwriting the anti-FOUC class and clobbering localStorage on first render
   useEffect(() => {
+    if (!mounted) return;
     document.documentElement.classList.toggle('dark', isDark);
     localStorage.setItem('label_theme', isDark ? 'dark' : 'light');
-  }, [isDark]);
+  }, [isDark, mounted]);
 
   const toggleTheme = useCallback(() => setIsDark((d) => !d), []);
 
