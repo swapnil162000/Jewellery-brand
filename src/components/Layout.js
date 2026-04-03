@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
@@ -15,6 +15,48 @@ export default function Layout({ children }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrollPct, setScrollPct] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const cursorDotRef = useRef(null);
+  const cursorRingRef = useRef(null);
+
+  // Custom cursor tracking
+  useEffect(() => {
+    const dot = cursorDotRef.current;
+    const ring = cursorRingRef.current;
+    if (!dot || !ring) return;
+
+    let ringX = 0, ringY = 0;
+    let mouseX = 0, mouseY = 0;
+    let rafId;
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function animate() {
+      ringX = lerp(ringX, mouseX, 0.12);
+      ringY = lerp(ringY, mouseY, 0.12);
+      dot.style.left = `${mouseX}px`;
+      dot.style.top = `${mouseY}px`;
+      ring.style.left = `${ringX}px`;
+      ring.style.top = `${ringY}px`;
+      rafId = requestAnimationFrame(animate);
+    }
+
+    function onMove(e) { mouseX = e.clientX; mouseY = e.clientY; }
+    function onEnterLink() { document.body.classList.add('cursor-hover'); }
+    function onLeaveLink()  { document.body.classList.remove('cursor-hover'); }
+
+    document.addEventListener('mousemove', onMove, { passive: true });
+    document.querySelectorAll('a, button, [role="button"]').forEach((el) => {
+      el.addEventListener('mouseenter', onEnterLink);
+      el.addEventListener('mouseleave', onLeaveLink);
+    });
+
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      document.removeEventListener('mousemove', onMove);
+    };
+  }, []);
 
   useEffect(() => {
     function onScroll() {
@@ -29,6 +71,10 @@ export default function Layout({ children }) {
 
   return (
     <div>
+      {/* Custom cursor (hidden on touch devices via CSS) */}
+      <div id="cursor-dot" ref={cursorDotRef} aria-hidden="true" />
+      <div id="cursor-ring" ref={cursorRingRef} aria-hidden="true" />
+
       {/* Skip nav */}
       <a
         href="#main-content"

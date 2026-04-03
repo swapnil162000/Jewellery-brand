@@ -40,7 +40,7 @@ export default function TrustBar() {
       <div className="max-w-[1100px] mx-auto flex flex-wrap items-center justify-center gap-0">
         {items.map((item, i) => (
           <div key={item.label} className="flex items-center gap-0">
-            <div className="flex items-center gap-2.5 px-8 py-2 text-[11px] tracking-[0.1em] uppercase font-medium text-charcoal">
+            <div className="trust-item flex items-center gap-2.5 px-8 py-2 text-[11px] tracking-[0.1em] uppercase font-medium text-charcoal">
               <span className="text-accent-dark">{item.icon}</span>
               <span>{item.label}</span>
             </div>

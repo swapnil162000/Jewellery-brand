@@ -57,7 +57,9 @@ export default function Hero() {
             className="w-full h-full object-cover"
             loading={i === 0 ? 'eager' : 'lazy'}
           />
+          {/* key={current} re-mounts text on every slide change, re-triggering CSS animations */}
           <div
+            key={current}
             className="absolute text-white text-center"
             style={{
               bottom: '60px',
@@ -66,21 +68,23 @@ export default function Hero() {
               width: 'min(640px, 80%)',
             }}
           >
-            <p className="text-[11px] tracking-[0.25em] uppercase mb-2.5 opacity-85 font-light">
+            <p className="hero-sub text-[11px] tracking-[0.25em] uppercase mb-2.5 opacity-85 font-light">
               {slide.sub}
             </p>
             <h1
-              className="font-display font-light leading-[1.05] mb-7"
+              className="hero-title font-display font-light leading-[1.05] mb-7"
               style={{ fontSize: 'clamp(40px, 6vw, 80px)', letterSpacing: '0.01em' }}
             >
               {slide.title}
             </h1>
-            <Link
-              href={slide.href}
-              className="inline-block px-7 py-3.5 bg-white text-charcoal text-[11px] tracking-[0.14em] uppercase font-semibold hover:bg-charcoal hover:text-white transition-colors"
-            >
-              {slide.cta}
-            </Link>
+            <span className="hero-cta inline-block">
+              <Link
+                href={slide.href}
+                className="inline-block px-7 py-3.5 bg-white text-charcoal text-[11px] tracking-[0.14em] uppercase font-semibold hover:bg-charcoal hover:text-white transition-colors"
+              >
+                {slide.cta}
+              </Link>
+            </span>
           </div>
         </div>
       ))}
@@ -117,6 +121,18 @@ export default function Hero() {
             aria-label={`Go to slide ${i + 1}`}
           />
         ))}
+      </div>
+
+      {/* Scroll hint */}
+      <div
+        className="hero-scroll-hint absolute left-1/2 z-10 text-white/60 flex flex-col items-center gap-1.5"
+        style={{ bottom: '18px' }}
+        aria-hidden="true"
+      >
+        <span className="text-[9px] tracking-[0.2em] uppercase font-light">Scroll</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
       </div>
     </section>
   );

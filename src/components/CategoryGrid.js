@@ -25,8 +25,14 @@ export default function CategoryGrid() {
               className="w-full h-full object-cover"
               loading="lazy"
             />
-            <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-[11px] tracking-[0.22em] font-semibold uppercase whitespace-nowrap">
-              {cat.label}
+            {/* Gradient overlay */}
+            <div className="cat-overlay" aria-hidden="true" />
+            {/* Label with animated underline */}
+            <span className="cat-label absolute bottom-6 left-1/2 -translate-x-1/2 text-white z-10">
+              <span className="cat-label-text text-[11px] tracking-[0.22em] font-semibold uppercase whitespace-nowrap block">
+                {cat.label}
+              </span>
+              <span className="cat-line" aria-hidden="true" />
             </span>
           </Link>
         ))}
